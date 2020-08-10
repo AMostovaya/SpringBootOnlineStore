@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body class="bg-light">
+
+<th:block th:if="${error}">
+    <div th:replace="fragments/header :: alert"></div>
+</th:block>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="d-flex">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <div class="content p-4">
+        <h2 class="mb-4" th:if="${edit}">Edit product</h2>
+        <h2 class="mb-4" th:if="${create}">Create new product</h2>
+        <div class="card-body">
+            This is a blank page you can add new product.
+        </div>
+        <form th:action="@{/product}" method="post" th:object="${product}" enctype="multipart/form-data">
+            <input th:type="hidden" th:field="*{id}">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" th:field="*{name}" class="form-control mb-3"  placeholder="Enter name">
+                <small id="nameError" class="form-text text-error"
+                       th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Validation error</small>
+                <label for="price">Price</label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">$</span>
+                    </div>
+                    <input type="text" id="price" th:field="*{price}" class="form-control" aria-label="Amount (to the nearest dollar)">
+                    <div class="input-group-append">
+                        <span class="input-group-text">.00</span>
+                    </div>
+                </div>
+                <label for="category">Category</label>
+               <select class="form-control" id="category" th:field="*{category}" required>
+                    <option th:each="cat : ${categories}"
+                            th:text="${cat.name}"
+                            th:value="${cat.id}">
+                    </option>
+                </select>
+                <div class="form-group">
+                    <label for="brand">Brand</label>
+                    <select class="form-control" id="brand" th:field="*{brand}" required>
+                        <option th:each="brand : ${brands}"
+                                th:text="${brand.name}"
+                                th:value="${brand.id}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="newPictures">Product image</label>
+                    <input th:field="*{newPictures}" type="file" class="form-control" id="newPictures"
+                           placeholder="Upload new product picture" multiple>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div class="container-fluid mb-4">
+            <div class="card-columns" style="column-count: 5">
+                <div class="card" th:each="pict : ${product.pictures}">
+                    <div class="card-header">Picture</div>
+                    <img class="card-img-bottom" th:src="@{/picture/{pictureId}(pictureId=${pict.id})}"
+                         width="40%"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/bootadmin.min.js}"></script>
+
+</body>
+</html>
