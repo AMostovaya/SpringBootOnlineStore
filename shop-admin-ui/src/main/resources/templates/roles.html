@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: head"></head>
+
+<body class="bg-light">
+<div th:replace="fragments/header :: header"></div>
+
+<div class="d-flex">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <div class="content p-4">
+        <h2 class="mb-4">Blank/Starter</h2>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                Roles of users.
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="col-12">
+                <a class="btn btn-primary" th:href="@{/role/new}">Add Role</a>
+            </div>
+            <table class="table table-bordered my-2" >
+                <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="role : ${rolesPage}">
+                    <th scope="row" th:text="${role.id}">1</th>
+                    <td th:text="${role.name}">admin</td>
+
+                    <td>
+                        <form th:action="@{/role/(id=${role.id})}" th:method="delete">
+                            <a class="btn btn-success" th:href="@{/role/edit/{id}(id=${role.id})}" >
+                                <i class="fas fa-edit"></i></a>
+
+                            <button class="btn btn-danger">
+                                <i class="far fa-trash-alt"></i></button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+
+<script th:replace="fragments/footer :: scripts"></script>
+<script th:src="@{/js/datatables.min.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('#roles').DataTable();
+    });
+</script>
+
+</body>
+</html>
