@@ -18,8 +18,7 @@ import ru.geekbrains.repo.BrandRepository;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,9 +36,15 @@ public class BrandControllerTest {
     @Autowired
     private BrandRepository brandRepository;
 
+    @BeforeEach
+    public void init() {
+        brandRepository.deleteAllInBatch();
+    }
+
     // добавление нового бренда
     @WithMockUser(value = "admin", password = "admin", roles = {"ADMIN"})
     @Test
+    //@Disabled пропуск теста в случае не стабильности
     public void addNewBrandTest() throws Exception {
         mvc.perform(post("/brand")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -64,14 +69,15 @@ public class BrandControllerTest {
         // предварительно создадим новый с нужным id
         Brand brand = new Brand();
         brand.setName("New brand");
-        brandRepository.save(brand);
+        Long id = brandRepository.save(brand).getId();
+
+        assertTrue(brandRepository.existsById(id));
 
         mvc.perform(delete("/brand/{id}/delete", brand.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)
-            .with(csrf()))
+             .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/brands"));
+        assertFalse(brandRepository.existsById(id));
     }
 
 }

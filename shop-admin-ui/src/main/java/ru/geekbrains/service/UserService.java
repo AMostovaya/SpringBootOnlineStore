@@ -20,12 +20,13 @@ import java.util.Optional;
 @Service
 public class UserService {
 
+    private final PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    //private  PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
     }
 
@@ -61,8 +62,8 @@ public class UserService {
 
     @Transactional
     public void save(User user) {
-        //user.setPassword(passwordEncoder.encode(user.getPassword())); // шифруем пароль
-        userRepository.save(user);
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // шифруем пароль
+        //userRepository.save(user);
     }
 
     public void delete(Long id) {

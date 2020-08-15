@@ -24,6 +24,7 @@ public class UserController {
     private UserService userService;
     private final RoleRepository roleRepository;
 
+
     @Autowired
     public UserController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
@@ -71,18 +72,13 @@ public class UserController {
        model.addAttribute("user", user.get());
        model.addAttribute("roles", roleRepository.findAll());
        return "user";
-
    }
-
-
 
     @DeleteMapping
     public String deleteUser(@RequestParam("id") Long id) {
-
         log.info("Delete {}", id);
         userService.delete(id);
         return "redirect:/user";
-
     }
 
 }

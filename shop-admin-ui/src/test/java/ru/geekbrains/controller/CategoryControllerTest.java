@@ -19,8 +19,7 @@ import ru.geekbrains.repo.CategoryRepository;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,7 +63,10 @@ public class CategoryControllerTest {
         // предварительно создадим новый с нужным id
         Category category = new Category();
         category.setName("New category");
-        categoryRepository.save(category);
+        Long id = categoryRepository.save(category).getId();
+
+        assertTrue(categoryRepository.existsById(id));
+
 
         mvc.perform(delete("/category/delete/{id}", category.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -72,6 +74,8 @@ public class CategoryControllerTest {
                 .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/category"));
+
+        assertFalse(categoryRepository.existsById(id));
     }
 
 }

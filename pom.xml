@@ -27,6 +27,7 @@
         <module>picture-service</module>
         <module>stock-service</module>
         <module>shop-zuul</module>
+        <module>shop-ui-tests</module>
     </modules>
 
     <dependencyManagement>
