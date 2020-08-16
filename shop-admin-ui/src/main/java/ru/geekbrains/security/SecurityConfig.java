@@ -52,11 +52,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userDetailsService);
-        auth.setPasswordEncoder(passwordEncoder);
-        return auth;
+     @Autowired
+    public void authConfigure(AuthenticationManagerBuilder auth,
+                              UserDetailsService userDetailsService,
+                              PasswordEncoder passwordEncoder) throws Exception {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        auth.authenticationProvider(provider);
+
+        auth.inMemoryAuthentication()
+                .withUser("admin")
+                .password(passwordEncoder.encode("admin"))
+                .roles("ADMIN");
     }
 
 
