@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body class="bg-light">
+<div th:replace="fragments/header :: header"></div>
+
+
+<div class="d-flex">
+    <div th:replace="fragments/sidebar :: sidebar"></div>
+
+    <div class="content p-4">
+        <h2 class="mb-4">Blank/Starter</h2>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                This is a blank page you can use as a starting point.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:replace="fragments/footer :: scripts"></script>
+</body>
+</html>
